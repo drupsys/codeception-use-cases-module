@@ -30,4 +30,5 @@ logs:
 
 .PHONY: setup
 setup:
-	exit 1
+	$(MAKE) build
+	docker exec -it -u package use-cases-module composer install

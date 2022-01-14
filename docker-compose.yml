@@ -1,0 +1,12 @@
+version: '3'
+services:
+  use-cases-module:
+    build:
+      context: temp-module
+      args:
+        OS_UID: "${OS_UID}"
+        OS_GID: "${OS_GID}"
+    container_name: use-cases-module
+    entrypoint: tail -f /dev/null
+    volumes:
+    - .:/module

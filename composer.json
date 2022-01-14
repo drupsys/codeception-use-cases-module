@@ -1,0 +1,29 @@
+{
+    "name": "codeception/use-cases-module",
+    "type": "library",
+    "license": "MIT",
+    "description": "Codeception objects to support use case based tests",
+    "authors": [
+        {
+            "name": "Dovydas Rupsys",
+            "email": "dovydas.rupsys@outlook.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4.0",
+        "lstrojny/functional-php": "^1.17"
+    },
+    "autoload": {
+        "psr-4": {
+            "MVF\\UseCases\\": "src/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.4",
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^2.0",
+        "scheb/tombstone-logger": "^1.5",
+        "illuminate/database": "^8.79",
+        "guzzlehttp/guzzle": "^7.4"
+    }
+}

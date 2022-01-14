@@ -1,5 +1,5 @@
 {
-    "name": "codeception/use-cases-module",
+    "name": "drupsys/use-cases-module",
     "type": "library",
     "license": "MIT",
     "description": "Codeception objects to support use case based tests",

@@ -5,10 +5,10 @@ chdir(__DIR__);
 
 define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'testing');
 
-define('BASEPATH', dirname(__FILE__) . '/../../../system/');
-define('FCPATH', dirname(__FILE__) . '/../../../public/');
-define('APPPATH', dirname(__FILE__) . '/../../../application/');
-define('VIEWPATH', dirname(__FILE__) . '/../../../application/views/');
+define('BASEPATH', $cwd . '/system/');
+define('FCPATH', $cwd . '/public/');
+define('APPPATH', $cwd . '/application/');
+define('VIEWPATH', $cwd . '/application/views/');
 
 define('EXT', '.php');
 

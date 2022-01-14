@@ -8,6 +8,7 @@ use DateTime;
 use GuzzleHttp\Utils;
 use MVF\UseCases\Contracts\ActorInterface;
 use MVF\UseCases\Contracts\TesterInterface;
+use MVF\UseCases\Exceptions\InvalidActorProvided;
 use Throwable;
 use function Functional\each;
 use function Functional\last;
@@ -117,12 +118,16 @@ abstract class BaseCest
 
     /**
      * @dataProvider tests
-     * @param ActorInterface $I
+     * @param mixed $I
      * @param Example $testCase
      * @throws Throwable
      */
-    public function test(ActorInterface $I, Example $testCase)
+    public function test($I, Example $testCase)
     {
+        if (!($I instanceof ActorInterface)) {
+            throw new InvalidActorProvided();
+        }
+
         $I->wantTo($testCase['name']);
 
         if (!isset($testCase['inputs']) || !isset($testCase['assert'])) {

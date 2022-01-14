@@ -4,18 +4,18 @@
 namespace MVF\UseCases;
 
 use Illuminate\Database\Connection;
-use MVF\Exceptions\InvalidConnectionObject;
-use MVF\Exceptions\MissingRequiredConfig;
 use MVF\UseCases\Contracts\MySqlInterface;
 use MVF\UseCases\Contracts\RedisInterface;
+use MVF\UseCases\Exceptions\InvalidConnectionObject;
+use MVF\UseCases\Exceptions\MissingRequiredConfig;
 use Redis;
 
 class Config
 {
-    private static array $config;
+    private static array $config = [];
 
-    private static ?Connection $mysql;
-    private static ?Redis $redis;
+    private static ?Connection $mysql = null;
+    private static ?Redis $redis = null;
 
     public static function set(array $config)
     {
@@ -24,7 +24,7 @@ class Config
 
     public static function mysql(): Connection
     {
-        if (!isset(self::$mysql)) {
+        if (self::$mysql === null) {
             $className = self::$config['mysql'];
             if (empty($className)) {
                 throw new MissingRequiredConfig('mysql');
@@ -43,7 +43,7 @@ class Config
 
     public static function redis(): Redis
     {
-        if (!isset(self::$redis)) {
+        if (self::$redis === null) {
             $className = self::$config['redis'];
             if (empty($className)) {
                 throw new MissingRequiredConfig('redis');

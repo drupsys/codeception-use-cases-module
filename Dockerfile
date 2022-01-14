@@ -13,6 +13,6 @@ COPY --chown=package ./composer.* ./
 
 RUN composer install -n --no-autoloader --no-scripts --no-progress --no-suggest
 
-COPY --chown=package temp-module .
+COPY --chown=package . .
 
 RUN composer dump-autoload -o

@@ -2,7 +2,7 @@ version: '3'
 services:
   use-cases-module:
     build:
-      context: temp-module
+      context: .
       args:
         OS_UID: "${OS_UID}"
         OS_GID: "${OS_GID}"

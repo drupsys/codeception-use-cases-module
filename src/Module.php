@@ -1,6 +1,6 @@
 <?php
 
-namespace MVF\UseCases;
+namespace MVF\Codeception\UseCases;
 
 class Module extends \Codeception\Module
 {

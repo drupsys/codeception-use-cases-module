@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MVF\\UseCases\\": "src/"
+            "MVF\\Codeception\\UseCases\\": "src/"
         }
     },
     "require-dev": {

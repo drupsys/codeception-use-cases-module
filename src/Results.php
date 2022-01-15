@@ -1,9 +1,9 @@
 <?php
 
-namespace MVF\UseCases;
+namespace MVF\Codeception\UseCases;
 
-use MVF\UseCases\Contracts\ActionResults;
-use MVF\UseCases\Contracts\ActorInterface;
+use MVF\Codeception\UseCases\Contracts\ActionResults;
+use MVF\Codeception\UseCases\Contracts\ActorInterface;
 
 class Results implements ActionResults
 {

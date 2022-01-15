@@ -1,13 +1,13 @@
 <?php
 
 
-namespace MVF\UseCases;
+namespace MVF\Codeception\UseCases;
 
 use Illuminate\Database\Connection;
-use MVF\UseCases\Contracts\MySqlInterface;
-use MVF\UseCases\Contracts\RedisInterface;
-use MVF\UseCases\Exceptions\InvalidConnectionObject;
-use MVF\UseCases\Exceptions\MissingRequiredConfig;
+use MVF\Codeception\UseCases\Contracts\MySqlInterface;
+use MVF\Codeception\UseCases\Contracts\RedisInterface;
+use MVF\Codeception\UseCases\Exceptions\InvalidConnectionObject;
+use MVF\Codeception\UseCases\Exceptions\MissingRequiredConfig;
 use Redis;
 
 class Config

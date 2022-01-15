@@ -1,14 +1,14 @@
 <?php
 
-namespace MVF\UseCases;
+namespace MVF\Codeception\UseCases;
 
 use Codeception\Example;
 use Carbon\Carbon as CarbonTime;
 use DateTime;
 use GuzzleHttp\Utils;
-use MVF\UseCases\Contracts\ActorInterface;
-use MVF\UseCases\Contracts\TesterInterface;
-use MVF\UseCases\Exceptions\InvalidActorProvided;
+use MVF\Codeception\UseCases\Contracts\ActorInterface;
+use MVF\Codeception\UseCases\Contracts\TesterInterface;
+use MVF\Codeception\UseCases\Exceptions\InvalidActorProvided;
 use Throwable;
 use function Functional\each;
 use function Functional\last;

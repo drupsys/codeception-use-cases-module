@@ -1,6 +1,6 @@
 <?php
 
-namespace MVF\UseCases\Exceptions;
+namespace MVF\Codeception\UseCases\Exceptions;
 
 use RuntimeException;
 

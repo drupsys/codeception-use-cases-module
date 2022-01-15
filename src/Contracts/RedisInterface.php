@@ -1,6 +1,6 @@
 <?php
 
-namespace MVF\UseCases\Contracts;
+namespace MVF\Codeception\UseCases\Contracts;
 
 use Redis;
 

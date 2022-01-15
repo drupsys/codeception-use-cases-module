@@ -2,12 +2,15 @@
 
 namespace MVF\Codeception\UseCases\Exceptions;
 
+use MVF\Codeception\UseCases\Contracts\ActorInterface;
 use RuntimeException;
 
 class InvalidActorProvided extends RuntimeException
 {
-    public function __construct()
+    public function __construct(string $instanceClass)
     {
-        parent::__construct("You codeception actor must implement an ActorInterface");
+        $className = ActorInterface::class;
+        $docs = 'https://github.com/drupsys/codeception-use-cases-module/blob/main/docs/exceptions/InvalidActorProvided.md';
+        parent::__construct("Actor '$instanceClass' must implement '$className', read documentation $docs");
     }
 }

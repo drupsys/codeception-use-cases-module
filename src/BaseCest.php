@@ -125,7 +125,7 @@ abstract class BaseCest
     public function test($I, Example $testCase)
     {
         if (!($I instanceof ActorInterface)) {
-            throw new InvalidActorProvided();
+            throw new InvalidActorProvided(get_class($I));
         }
 
         $I->wantTo($testCase['name']);

@@ -2,7 +2,7 @@
     "name": "drupsys/codeception-use-cases-module",
     "type": "library",
     "license": "MIT",
-    "description": "Codeception objects to support use case based tests",
+    "description": "Codeception module to support use case based tests",
     "authors": [
         {
             "name": "Dovydas Rupsys",

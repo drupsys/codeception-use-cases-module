@@ -48,7 +48,7 @@ class Config
     public static function redis(): Redis
     {
         if (self::$redis === null) {
-            $className = self::$config['redis'];
+            $className = self::$config['providers']['redis'];
             $instance = new $className();
             if ($instance instanceof RedisInterface) {
                 self::$redis = $instance->getRedis();

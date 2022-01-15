@@ -1,5 +1,5 @@
 {
-    "name": "drupsys/use-cases-module",
+    "name": "drupsys/codeception-use-cases-module",
     "type": "library",
     "license": "MIT",
     "description": "Codeception objects to support use case based tests",
@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4.0",
+        "ext-redis": "*",
         "lstrojny/functional-php": "^1.17",
         "guzzlehttp/guzzle": "^7.4"
     },

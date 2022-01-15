@@ -18,11 +18,11 @@ down:
 
 .PHONY: shell
 shell:
-	docker exec -it -u package use-cases-module sh
+	docker exec -it -u package codeception-use-cases-module sh
 
 .PHONY: test
 test:
-	docker exec -it use-cases-module vendor/bin/codecept run tests/$(filter)
+	docker exec -it codeception-use-cases-module vendor/bin/codecept run tests/$(filter)
 
 .PHONY: logs
 logs:
@@ -31,4 +31,4 @@ logs:
 .PHONY: setup
 setup:
 	$(MAKE) build
-	docker exec -it -u package use-cases-module composer install
+	docker exec -it -u package codeception-use-cases-module composer install

@@ -1,6 +1,6 @@
 # MissingRequiredProvider
 
-There are two providers that this more requires in order to be able to function, these are `mysql` and `redis` providers. If you receive this error that means you have not implemented one of these providers or incorrectly configured this module.
+There are two providers that this module requires in order to be able to function, these are `mysql` and `redis` providers. If you receive this error that means you have not implemented one of these providers or incorrectly configured this module.
 
 First, check suite configuration, assuming `\MVF\Codeception\UseCases\Module` is implemented by `usecase.suite.yml` then your suite should look something like this
 

@@ -42,5 +42,5 @@ interface ActorInterface
      * @param string $databaseAndTable
      * @return string[]
      */
-    public static function getKeyIdentifier(string $databaseAndTable): array;
+    public function getKeyIdentifier(string $databaseAndTable): array;
 }

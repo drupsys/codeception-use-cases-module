@@ -59,4 +59,9 @@ class Config
 
         return self::$redis;
     }
+
+    public static function maxwell(): string
+    {
+        return self::$config['maxwell'] ?? 'maxwell';
+    }
 }

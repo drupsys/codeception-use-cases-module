@@ -6,8 +6,8 @@ namespace MVF\Codeception\UseCases;
 use Illuminate\Database\Connection;
 use MVF\Codeception\UseCases\Contracts\MySqlInterface;
 use MVF\Codeception\UseCases\Contracts\RedisInterface;
-use MVF\Codeception\UseCases\Exceptions\InvalidConnectionObject;
-use MVF\Codeception\UseCases\Exceptions\MissingRequiredConfig;
+use MVF\Codeception\UseCases\Exceptions\InvalidProviderImplementation;
+use MVF\Codeception\UseCases\Exceptions\MissingRequiredProvider;
 use Redis;
 
 class Config
@@ -20,21 +20,25 @@ class Config
     public static function set(array $config)
     {
         self::$config = $config;
+
+        if (!isset(self::$config['providers']['mysql']) || empty(self::$config['providers']['mysql'])) {
+            throw new MissingRequiredProvider('mysql');
+        }
+
+        if (!isset(self::$config['providers']['redis']) || empty(self::$config['providers']['redis'])) {
+            throw new MissingRequiredProvider('redis');
+        }
     }
 
     public static function mysql(): Connection
     {
         if (self::$mysql === null) {
-            $className = self::$config['mysql'];
-            if (empty($className)) {
-                throw new MissingRequiredConfig('mysql');
-            }
-
+            $className = self::$config['providers']['mysql'];
             $instance = new $className();
             if ($instance instanceof MySqlInterface) {
                 self::$mysql = $instance->getMySql();
             } else {
-                throw new InvalidConnectionObject("MYSQL");
+                throw new InvalidProviderImplementation($className, MySqlInterface::class);
             }
         }
 
@@ -45,15 +49,11 @@ class Config
     {
         if (self::$redis === null) {
             $className = self::$config['redis'];
-            if (empty($className)) {
-                throw new MissingRequiredConfig('redis');
-            }
-
             $instance = new $className();
             if ($instance instanceof RedisInterface) {
                 self::$redis = $instance->getRedis();
             } else {
-                throw new InvalidConnectionObject("REDIS");
+                throw new InvalidProviderImplementation($className, RedisInterface::class);
             }
         }
 

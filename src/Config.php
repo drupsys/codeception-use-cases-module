@@ -60,8 +60,8 @@ class Config
         return self::$redis;
     }
 
-    public static function maxwell(): string
+    public static function redisKey(): string
     {
-        return self::$config['maxwell'] ?? 'maxwell';
+        return self::$config['redis_key'] ?? 'maxwell';
     }
 }

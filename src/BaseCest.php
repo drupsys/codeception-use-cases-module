@@ -55,7 +55,7 @@ abstract class BaseCest
             each($databases, function (array $tableRows, string $table) {
                 Config::mysql()->table($table)->truncate();
             });
-            Config::redis()->del(Config::maxwell());
+            Config::redis()->del(Config::redisKey());
         };
 
         if ($dontCheckKeyConstraints) {
@@ -74,7 +74,7 @@ abstract class BaseCest
 
     private function readBinLogs(ActorInterface $I, array $inputDatabase): array
     {
-        $changes = array_values(Config::redis()->xRange(Config::maxwell(), '-', '+'));
+        $changes = array_values(Config::redis()->xRange(Config::redisKey(), '-', '+'));
         foreach ($changes as $change) {
             $record = Utils::jsonDecode($change['message'], true);
             $table = sprintf('%s.%s', $record['database'], $record['table']);

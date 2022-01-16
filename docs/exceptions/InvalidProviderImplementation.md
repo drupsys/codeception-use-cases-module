@@ -43,7 +43,7 @@ namespace App;
 use MVF\Codeception\UseCases\Contracts\RedisInterface;
 use Redis;
 
-class RedisProvider implements RedisInterface
+class YourObject implements RedisInterface
 {
     public function __construct() {}
 

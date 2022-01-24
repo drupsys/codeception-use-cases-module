@@ -12,7 +12,7 @@ class StageIterator
     private array $stages;
     private int $index;
 
-    public function __construct(ActionResults $action)
+    private function __construct(ActionResults $action)
     {
         if (!isset($action['state']['stages'])) {
             throw new NoStagesDefined();
@@ -20,6 +20,10 @@ class StageIterator
 
         $this->stages = $action['state']['stages'];
         $this->index = 0;
+    }
+
+    public static function build(ActionResults $action): self {
+        return new self($action);
     }
 
     public function next(string $operationName): self

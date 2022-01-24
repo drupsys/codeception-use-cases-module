@@ -8,10 +8,13 @@ use MVF\Codeception\UseCases\Exceptions\NoPrevStageResponseFound;
 use MVF\Codeception\UseCases\Exceptions\NoStagesDefined;
 use MVF\Codeception\UseCases\Exceptions\StageDoesNotHaveAnOperationName;
 use MVF\Codeception\UseCases\Exceptions\StageDoesNotHaveAResponse;
+use RuntimeException;
+use function Functional\first;
 
 class StageIterator
 {
     private array $stages;
+    private ?array $currentStage = null;
     private int $index;
 
     private function __construct(ActionResults $action)
@@ -21,6 +24,7 @@ class StageIterator
         }
 
         $this->stages = $action['state']['stages'];
+        $this->currentStage = first($this->stages);
         $this->index = 0;
     }
 
@@ -78,7 +82,11 @@ class StageIterator
 
     public function response(): array
     {
-        $stage = $this->stages[$this->index];
+        $stage = $this->currentStage;
+        if (!isset($stage)) {
+            throw new RuntimeException('No current stage exists');
+        }
+
         if (!isset($stage['operation'])) {
             throw new StageDoesNotHaveAnOperationName();
         }

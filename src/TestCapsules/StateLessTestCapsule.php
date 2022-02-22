@@ -1,12 +1,12 @@
 <?php
 
-namespace MVF\Codeception\UseCases\StateLess;
+namespace MVF\Codeception\UseCases\TestCapsules;
 
 use MVF\Codeception\UseCases\Contracts\ActionInterface;
-use MVF\Codeception\UseCases\Contracts\TesterInterface;
+use MVF\Codeception\UseCases\TestCapsule;
 use Throwable;
 
-class TestCapsule implements TesterInterface
+class StateLessTestCapsule extends TestCapsule
 {
     private ActionInterface $action;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace MVF\Codeception\UseCases\StateFull;
+namespace MVF\Codeception\UseCases\TestCapsules;
 
 use MVF\Codeception\UseCases\Contracts\ActionInterface;
 use MVF\Codeception\UseCases\Contracts\DoubleInterface;
-use MVF\Codeception\UseCases\Contracts\TesterInterface;
+use MVF\Codeception\UseCases\TestCapsule;
 use Throwable;
 
-class TestCapsule implements TesterInterface
+class StateFullTestCapsule extends TestCapsule
 {
     private string $actionClass;
     private string $doubleClass;

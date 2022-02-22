@@ -7,7 +7,6 @@ use Carbon\Carbon as CarbonTime;
 use DateTime;
 use GuzzleHttp\Utils;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
-use MVF\Codeception\UseCases\Contracts\TesterInterface;
 use MVF\Codeception\UseCases\Exceptions\InvalidActorProvided;
 use Throwable;
 use function Functional\each;
@@ -17,7 +16,7 @@ use function Functional\map;
 abstract class BaseCest
 {
     protected abstract function testCases(): array;
-    protected abstract function tester(): TesterInterface;
+    protected abstract function tester(): TestCapsule;
 
     private function tests(): array
     {
@@ -100,14 +99,16 @@ abstract class BaseCest
     private function withDatabase(ActorInterface $I, array $inputs, callable $tester): array
     {
         if (isset($inputs['database'])) {
-            $this->setup($inputs['database']);
+            $database = $this->tester()->transformInitialDatabase($inputs['database']);
+            $this->setup($database);
 
             try {
                 $actual = $tester();
             } finally {
                 usleep(50000); // wait a little for bin logs to catchup
-                $actual['database'] = $this->readBinLogs($I, $inputs['database']);
-                $this->reset($actual['database']);
+                $database = $this->readBinLogs($I, $inputs['database']);
+                $this->reset($database);
+                $actual['database'] = $this->tester()->transformFinalDatabase($database);
             }
 
             return $actual;

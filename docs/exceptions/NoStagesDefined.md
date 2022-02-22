@@ -61,7 +61,7 @@ Your capsule's `entrypoint` function does not return stages, e.g.
 you have something like this
 
 ```php
-class YourTestCapsule implements TesterInterface
+class YourTestCapsule extends TestCapsule
 {
     function entrypoint(array $state, array $request): array
     {
@@ -85,7 +85,7 @@ class YourTestCapsule implements TesterInterface
 instead of
 
 ```php
-class YourTestCapsule implements TesterInterface
+class YourTestCapsule extends TestCapsule
 {
     function entrypoint(array $state, array $request): array
     {

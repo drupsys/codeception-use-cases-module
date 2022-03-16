@@ -5,31 +5,39 @@ namespace MVF\Codeception\UseCases\TestCapsules;
 use MVF\Codeception\UseCases\Contracts\ActionInterface;
 use MVF\Codeception\UseCases\Contracts\DoubleInterface;
 use MVF\Codeception\UseCases\TestCapsule;
+use ReflectionClass;
+use RuntimeException;
 use Throwable;
 
 class StateFullTestCapsule extends TestCapsule
 {
-    private string $actionClass;
-    private string $doubleClass;
-    private ActionInterface $action;
-    private DoubleInterface $double;
+    private ReflectionClass $action;
+    private ReflectionClass $double;
 
     public function __construct(string $actionClass, string $doubleClass)
     {
-        $this->actionClass = $actionClass;
-        $this->doubleClass = $doubleClass;
+        $this->action = new ReflectionClass($actionClass);
+        $this->double = new ReflectionClass($doubleClass);
     }
 
     function entrypoint(array $state, array $request): array
     {
-        $this->double = new ($this->doubleClass)($state);
+        if ($this->double->implementsInterface(DoubleInterface::class) === false) {
+            throw new RuntimeException('interface not implemented');
+        }
+
+        $double = $this->double->newInstance($state);
+
+        if ($this->action->implementsInterface(ActionInterface::class) === false) {
+            throw new RuntimeException('interface not implemented');
+        }
 
         try {
-            $this->action = new ($this->actionClass)($this->double);
+            $action = $this->action->newInstance($double);
 
             return [
                 'state' => $state,
-                'response' => $this->action->handler($request),
+                'response' => $action->handler($request),
             ];
         } catch (Throwable $exception) {
             return [

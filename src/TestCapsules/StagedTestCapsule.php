@@ -39,10 +39,12 @@ class StagedTestCapsule extends TestCapsule
         $runners = map($this->stages, $this->convertToCallableRunners());
 
         try {
+            $responses = StageRunner::run($state, $runners);
+
             return [
                 'response' => [],
                 'state' => [
-                    'stages' => StageRunner::run($state, $runners),
+                    'stages' => $responses,
                 ],
             ];
         } catch (\Throwable $exception) {
@@ -62,7 +64,12 @@ class StagedTestCapsule extends TestCapsule
                 return $stage;
             } elseif ($stage instanceof SimpleTestCapsule) {
                 return function (array $request, array $state) use ($stage) {
-                    return $stage->entrypoint($state, $request);
+                    $result = $stage->entrypoint($state, $request);
+                    if (isset($result['exception'])) {
+                        throw $result['exception'];
+                    }
+
+                    return $result['response'];
                 };
             }
 

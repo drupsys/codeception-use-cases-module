@@ -38,7 +38,7 @@ class StageRunner
 
             $responses[$i] = [
                 'operation' => $operationName,
-                'response' => $operation($stage['request']),
+                'response' => $operation($stage['request'], $state),
             ];
         }
 

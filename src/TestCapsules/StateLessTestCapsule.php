@@ -8,6 +8,9 @@ use ReflectionClass;
 use RuntimeException;
 use Throwable;
 
+/**
+ * @deprecated use MVF\Codeception\UseCases\TestCapsules\SimpleTestCapsule instead
+ */
 class StateLessTestCapsule extends TestCapsule
 {
     private ReflectionClass $action;

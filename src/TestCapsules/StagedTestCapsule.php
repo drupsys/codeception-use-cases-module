@@ -39,12 +39,13 @@ class StagedTestCapsule extends TestCapsule
         $runners = map($this->stages, $this->convertToCallableRunners());
 
         try {
-            $responses = StageRunner::run($state, $runners);
+            $result = StageRunner::build($state, $runners)->start();
 
             return [
+                'exception' => $result['exception'],
                 'response' => [],
                 'state' => [
-                    'stages' => $responses,
+                    'stages' => $result['responses'],
                 ],
             ];
         } catch (\Throwable $exception) {

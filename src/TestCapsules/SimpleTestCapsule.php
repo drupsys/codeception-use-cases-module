@@ -14,6 +14,9 @@ class SimpleTestCapsule extends TestCapsule
     private ReflectionClass $action;
     private ?ReflectionClass $double = null;
 
+    /**
+     * @deprecated Use SimpleTestCapsule::build(actionClass, doubleClass) instead
+     */
     public function __construct(string $actionClass, ?string $doubleClass = null)
     {
         $this->action = new ReflectionClass($actionClass);
@@ -21,6 +24,11 @@ class SimpleTestCapsule extends TestCapsule
         if (isset($doubleClass)) {
             $this->double = new ReflectionClass($doubleClass);
         }
+    }
+
+    public static function build(string $actionClass, ?string $doubleClass = null): self
+    {
+        return new self($actionClass, $doubleClass);
     }
 
     public function entrypoint(array $state, array $request): array

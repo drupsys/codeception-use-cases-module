@@ -34,12 +34,16 @@ class SimpleTestCapsule extends TestCapsule
     public function entrypoint(array $state, array $request): array
     {
         if ($this->action->implementsInterface(ActionInterface::class) === false) {
-            throw new RuntimeException('interface not implemented');
+            throw new RuntimeException(
+                sprintf("'%s' must implement '%s'", $this->action->getName(), ActionInterface::class),
+            );
         }
 
         if ($this->double) {
             if ($this->double->implementsInterface(DoubleInterface::class) === false) {
-                throw new RuntimeException('interface not implemented');
+                throw new RuntimeException(
+                    sprintf("'%s' must implement '%s'", $this->double->getName(), DoubleInterface::class),
+                );
             }
 
             return $this->stateful($state, $request);

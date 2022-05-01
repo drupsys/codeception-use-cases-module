@@ -20,7 +20,7 @@ class GrabSeismicContentsCest extends BaseCest
     protected function tester(): TestCapsule
     {
         return StagedTestCapsule::build()
-            ->define('CREATE_FUTURE_CAPS', new SimpleTestCapsule(CreateFutureCaps::class, CreateFutureCapsDouble::class))
+            ->define('CREATE_FUTURE_CAPS', SimpleTestCapsule::build(CreateFutureCaps::class, CreateFutureCapsDouble::class))
             ->define('SET_NOW', function (array $request, array $state): array {
                 Carbon::setTestNow($request['now']);
                 return [];

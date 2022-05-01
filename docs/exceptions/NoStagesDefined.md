@@ -93,9 +93,7 @@ class YourTestCapsule extends TestCapsule
             return [
                 'response' => [],
                 'state' => [
-                    'stages' => StageRunner::run($state, [
-                        ...
-                    ]),
+                    'stages' => StageRunner::build($state, [...])->start(),
                 ],
             ];
         } catch (\Throwable $exception) {

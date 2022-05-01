@@ -29,7 +29,7 @@ class GrabSeismicContentsCest extends BaseCest
     protected function tester(): TestCapsule
     {
         return StagedTestCapsule::build()
-            ->define('CREATE_FUTURE_CAPS', CreateFutureCaps::class, CreateFutureCapsDouble::class);
+            ->define('CREATE_FUTURE_CAPS', SimpleTestCapsule::build(CreateFutureCaps::class, CreateFutureCapsDouble::class));
             // no SET_NOW stage implemented
     }
 }
@@ -45,7 +45,7 @@ class GrabSeismicContentsCest extends BaseCest
     protected function tester(): TestCapsule
     {
         return StagedTestCapsule::build()
-            ->define('CREATE_FUTURE_CAPS', new SimpleTestCapsule(CreateFutureCaps::class, CreateFutureCapsDouble::class))
+            ->define('CREATE_FUTURE_CAPS', SimpleTestCapsule::build(CreateFutureCaps::class, CreateFutureCapsDouble::class))
             ->define('SET_NOW', function (array $request, array $state): array {
                 Carbon::setTestNow($request['now']);
                 return [];
@@ -62,9 +62,9 @@ in your test capsule, you have something like this
 return [
     'response' => [],
     'state' => [
-        'stages' => StageRunner::run($state, [
+        'stages' => StageRunner::build($state, [
             // no SET_NOW operation implemented
-        ]),
+        ])->start(),
     ],
 ];
 ```
@@ -75,12 +75,12 @@ to fix this implement `SET_NOW` operation, like this
 return [
     'response' => [],
     'state' => [
-        'stages' => StageRunner::run($state, [
+        'stages' => StageRunner::build($state, [
             'SET_NOW' => function (array $request): array {
                 Carbon::setTestNow($request['now']);
                 return [];
             },
-        ]),
+        ])->start(),
     ],
 ];
 ```

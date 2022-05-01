@@ -14,20 +14,20 @@ in your assertion you are using `StageIterator`
 
 but the implementation of this operation does not return anything, e.g.
 ```php
-StageRunner::run($state, [
+StageRunner::build($state, [
     'SET_NOW' => function (array $request) {
         Carbon::setTestNow($request['now']);
     },
-]),
+])->start(),
 ```
 
 to fix this update the implementation so that it would return an array, e.g.
 
 ```php
-StageRunner::run($state, [
+StageRunner::build($state, [
     Mocks::SET_NOW => function (array $request): array {
         Carbon::setTestNow($request['now']);
         return [];
     },
-]),
+])->start(),
 ```

@@ -52,7 +52,7 @@ class StagedTestCapsule extends TestCapsule
         } catch (\Throwable $exception) {
             return [
                 'exception' => $exception,
-                'state' => [],
+                'state' => $state,
             ];
         } finally {
             Carbon::setTestNow($defaultTime);

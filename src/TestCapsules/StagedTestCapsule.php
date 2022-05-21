@@ -40,13 +40,14 @@ class StagedTestCapsule extends TestCapsule
 
         try {
             $result = StageRunner::build($state, $runners)->start();
+            unset($state['stages']);
 
             return [
                 'exception' => $result['exception'],
                 'response' => [],
-                'state' => [
+                'state' => array_replace_recursive($state, [
                     'stages' => $result['responses'],
-                ],
+                ]),
             ];
         } catch (\Throwable $exception) {
             return [

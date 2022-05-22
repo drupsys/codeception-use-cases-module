@@ -66,11 +66,11 @@ class StagedTestCapsule extends TestCapsule
             } elseif ($stage instanceof SimpleTestCapsule) {
                 return function (array $request, array $state) use ($stage) {
                     $result = $stage->entrypoint($state, $request);
-                    if (isset($result['exception'])) {
-                        throw $result['exception'];
+                    if ($result->getException() !== null) {
+                        throw $result->getException();
                     }
 
-                    return new OperationResult($result['response'], $result['state']);
+                    return new OperationResult($result->getResponse(), $result->getState());
                 };
             }
 

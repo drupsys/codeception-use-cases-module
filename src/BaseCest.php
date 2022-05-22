@@ -6,9 +6,11 @@ use Codeception\Example;
 use Carbon\Carbon as CarbonTime;
 use DateTime;
 use GuzzleHttp\Utils;
+use RuntimeException;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
 use MVF\Codeception\UseCases\Exceptions\InvalidActorProvided;
 use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
+use MVF\Codeception\UseCases\ValueObjects\TestResult;
 use Throwable;
 use function Functional\each;
 use function Functional\last;
@@ -97,8 +99,10 @@ abstract class BaseCest
         return $inputDatabase;
     }
 
-    private function withDatabase(ActorInterface $I, array $inputs, callable $tester): EntrypointResult
+    private function withDatabase(ActorInterface $I, array $inputs, callable $tester): TestResult
     {
+        $database = [];
+
         if (isset($inputs['database'])) {
             $database = $this->tester()->transformInitialDatabase($inputs['database']);
             $this->setup($database);
@@ -109,13 +113,22 @@ abstract class BaseCest
                 usleep(50000); // wait a little for bin logs to catchup
                 $database = $this->readBinLogs($I, $inputs['database']);
                 $this->reset($database);
-                $actual['database'] = $this->tester()->transformFinalDatabase($database);
+                $database = $this->tester()->transformFinalDatabase($database);
             }
-
-            return $actual;
         } else {
-            return $tester();
+            $actual = $tester();
         }
+
+        if (!($actual instanceof EntrypointResult)) {
+            throw new RuntimeException('invalid entrypoint response');
+        }
+
+        return new TestResult(
+            $actual->getResponse(),
+            $actual->getState(),
+            $database,
+            $actual->getException(),
+        );
     }
 
     /**

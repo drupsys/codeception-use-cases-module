@@ -4,33 +4,44 @@ namespace MVF\Codeception\UseCases;
 
 use MVF\Codeception\UseCases\Contracts\ActionResults;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
+use MVF\Codeception\UseCases\Contracts\ReadableInterface;
+use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
 
 class Results implements ActionResults
 {
     private ActorInterface $I;
-    private array $actual;
+    private EntrypointResult $actual;
 
-    public function __construct(ActorInterface $I, array $actual)
+    public function __construct(ActorInterface $I, EntrypointResult $actual)
     {
         $this->I = $I;
         $this->actual = $actual;
     }
 
-    public function getActual(): array
+    public function getActual(): EntrypointResult
     {
         return $this->actual;
     }
 
     public function expectException(string $name = null): void
     {
-        if (!isset($this->actual['exception'])) {
+        $exception = $this->actual->getException();
+        if ($exception === null) {
             $this->I->fail('Expected exception but it was not thrown');
+        } else if ($exception instanceof ReadableInterface) {
+            $this->I->fail('Error: ' . $exception->toString());
         }
 
         if ($name === null) {
-            unset($this->actual['exception']);
-        } elseif ($this->actual['exception'] instanceof $name) {
-            unset($this->actual['exception']);
+            $this->actual = new EntrypointResult(
+                $this->actual->getResponse(),
+                $this->actual->getState(),
+            );
+        } elseif ($exception instanceof $name) {
+            $this->actual = new EntrypointResult(
+                $this->actual->getResponse(),
+                $this->actual->getState(),
+            );
         }
     }
 

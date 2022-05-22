@@ -8,6 +8,7 @@ use DateTime;
 use GuzzleHttp\Utils;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
 use MVF\Codeception\UseCases\Exceptions\InvalidActorProvided;
+use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
 use Throwable;
 use function Functional\each;
 use function Functional\last;
@@ -96,7 +97,7 @@ abstract class BaseCest
         return $inputDatabase;
     }
 
-    private function withDatabase(ActorInterface $I, array $inputs, callable $tester): array
+    private function withDatabase(ActorInterface $I, array $inputs, callable $tester): EntrypointResult
     {
         if (isset($inputs['database'])) {
             $database = $this->tester()->transformInitialDatabase($inputs['database']);
@@ -157,8 +158,8 @@ abstract class BaseCest
         }
 
         $actual = $actionResults->getActual();
-        if (isset($actual['exception'])) {
-            throw $actual['exception'];
+        if ($actual->getException() !== null) {
+            throw $actual->getException();
         } elseif ($maybeRuntimeException) {
             throw $maybeRuntimeException;
         } elseif ($maybeAssertionException) {

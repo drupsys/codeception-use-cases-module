@@ -5,8 +5,12 @@ namespace MVF\Codeception\UseCases\MultiStage;
 use MVF\Codeception\UseCases\Exceptions\NoStagesDefined;
 use MVF\Codeception\UseCases\Exceptions\OperationIsNotCallable;
 use MVF\Codeception\UseCases\Exceptions\OperationNotImplemented;
+use MVF\Codeception\UseCases\Exceptions\OperationResultIsInvalid;
 use MVF\Codeception\UseCases\Exceptions\StageDoesNotHaveAnOperationName;
 use MVF\Codeception\UseCases\Exceptions\StageDoesNotHaveARequest;
+use MVF\Codeception\UseCases\ValueObjects\OperationResult;
+use MVF\Codeception\UseCases\ValueObjects\RunnerResult;
+use MVF\Codeception\UseCases\ValueObjects\StageResult;
 
 class StageRunner
 {
@@ -27,64 +31,29 @@ class StageRunner
         return new self($state, $operations);
     }
 
-    /**
-     * @deprecated Use StageRunner::build(state, operations)->start() instead
-     */
-    public static function run(array $state, array $operations): array
-    {
-        if (!(isset($state['stages']))) {
-            throw new NoStagesDefined();
-        }
-
-        $responses = [];
-        foreach ($state['stages'] as $i => $stage) {
-            if (!isset($stage['operation'])) {
-                throw new StageDoesNotHaveAnOperationName();
-            }
-
-            $operationName = $stage['operation'];
-            if (!isset($operations[$operationName])) {
-                throw new OperationNotImplemented($operationName);
-            }
-
-            $operation = $operations[$operationName];
-            if (!is_callable($operation)) {
-                throw new OperationIsNotCallable($operationName);
-            }
-
-            if (!isset($stage['request'])) {
-                throw new StageDoesNotHaveARequest($operationName);
-            }
-
-            $responses[$i] = [
-                'operation' => $operationName,
-                'response' => $operation($stage['request'], $state),
-            ];
-        }
-
-        return $responses;
-    }
-
-    public function start(): array
+    public function start(): RunnerResult
     {
         $responses = [];
         $exception = null;
+        $state = $this->state;
 
         foreach ($this->state['stages'] as $i => $stage) {
             try {
-                $responses[$i] = $this->startOperation($stage);
+                $result = $this->startOperation($stage, $state);
+                $state = $result->getState();
+                $responses[$i] = [
+                    'operation' => $result->getName(),
+                    'response' => $result->getResponse(),
+                ];
             } catch (\Throwable $exception) {
                 break;
             }
         }
 
-        return [
-            'responses' => $responses,
-            'exception' => $exception,
-        ];
+        return new RunnerResult($responses, $state, $exception);
     }
 
-    private function startOperation(array $stage): array
+    private function startOperation(array $stage, array $state): StageResult
     {
         if (!isset($stage['operation'])) {
             throw new StageDoesNotHaveAnOperationName();
@@ -104,9 +73,11 @@ class StageRunner
             throw new StageDoesNotHaveARequest($operationName);
         }
 
-        return [
-            'operation' => $operationName,
-            'response' => $operation($stage['request'], $this->state),
-        ];
+        $result = $operation($stage['request'], $state);
+        if (!($result instanceof OperationResult)) {
+            throw new OperationResultIsInvalid();
+        }
+
+        return new StageResult($operationName, $result->getResponse(), $result->getState());
     }
 }

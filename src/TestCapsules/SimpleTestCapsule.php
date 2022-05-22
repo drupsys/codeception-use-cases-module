@@ -5,6 +5,7 @@ namespace MVF\Codeception\UseCases\TestCapsules;
 use MVF\Codeception\UseCases\Contracts\ActionInterface;
 use MVF\Codeception\UseCases\Contracts\DoubleInterface;
 use MVF\Codeception\UseCases\TestCapsule;
+use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
 use ReflectionClass;
 use RuntimeException;
 use Throwable;
@@ -14,10 +15,7 @@ class SimpleTestCapsule extends TestCapsule
     private ReflectionClass $action;
     private ?ReflectionClass $double = null;
 
-    /**
-     * @deprecated Use SimpleTestCapsule::build(actionClass, doubleClass) instead
-     */
-    public function __construct(string $actionClass, ?string $doubleClass = null)
+    private function __construct(string $actionClass, ?string $doubleClass = null)
     {
         $this->action = new ReflectionClass($actionClass);
 
@@ -31,7 +29,7 @@ class SimpleTestCapsule extends TestCapsule
         return new self($actionClass, $doubleClass);
     }
 
-    public function entrypoint(array $state, array $request): array
+    public function entrypoint(array $state, array $request): EntrypointResult
     {
         if ($this->action->implementsInterface(ActionInterface::class) === false) {
             throw new RuntimeException(
@@ -52,39 +50,27 @@ class SimpleTestCapsule extends TestCapsule
         }
     }
 
-    private function stateless(array $state, array $request): array
+    private function stateless(array $state, array $request): EntrypointResult
     {
         try {
             $action = $this->action->newInstance();
 
-            return [
-                'state' => $state,
-                'response' => $action->handler($request),
-            ];
+            return new EntrypointResult($action->handler($request), $state);
         } catch (Throwable $exception) {
-            return [
-                'state' => $state,
-                'exception' => $exception,
-            ];
+            return new EntrypointResult([], $state, $exception);
         }
     }
 
-    private function stateful(array $state, array $request): array
+    private function stateful(array $state, array $request): EntrypointResult
     {
         $double = $this->double->newInstance($state);
 
         try {
             $action = $this->action->newInstance($double);
 
-            return [
-                'state' => $double->getState(),
-                'response' => $action->handler($request),
-            ];
+            return new EntrypointResult($action->handler($request), $double->getState());
         } catch (Throwable $exception) {
-            return [
-                'state' => $double->getState(),
-                'exception' => $exception,
-            ];
+            return new EntrypointResult([], $double->getState(), $exception);
         }
     }
 }

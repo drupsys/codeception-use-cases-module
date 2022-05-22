@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use MVF\Codeception\UseCases\Exceptions\InvalidStageProvided;
 use MVF\Codeception\UseCases\MultiStage\StageRunner;
 use MVF\Codeception\UseCases\TestCapsule;
+use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
+use MVF\Codeception\UseCases\ValueObjects\OperationResult;
 use function Functional\map;
 
 class StagedTestCapsule extends TestCapsule
@@ -32,7 +34,7 @@ class StagedTestCapsule extends TestCapsule
         return $this;
     }
 
-    public function entrypoint(array $state, array $request): array
+    public function entrypoint(array $state, array $request): EntrypointResult
     {
         $defaultTime = Carbon::now()->toDateTime();
 
@@ -42,18 +44,15 @@ class StagedTestCapsule extends TestCapsule
             $result = StageRunner::build($state, $runners)->start();
             unset($state['stages']);
 
-            return [
-                'exception' => $result['exception'],
-                'response' => [],
-                'state' => array_replace_recursive($state, [
-                    'stages' => $result['responses'],
+            return new EntrypointResult(
+                [],
+                array_replace_recursive($result->getState(), [
+                    'stages' => $result->getResponses(),
                 ]),
-            ];
+                $result->getException(),
+            );
         } catch (\Throwable $exception) {
-            return [
-                'exception' => $exception,
-                'state' => $state,
-            ];
+            return new EntrypointResult([], $state, $exception);
         } finally {
             Carbon::setTestNow($defaultTime);
         }
@@ -61,7 +60,7 @@ class StagedTestCapsule extends TestCapsule
 
     private function convertToCallableRunners(): callable
     {
-        return function ($stage) {
+        return function ($stage): callable {
             if (is_callable($stage)) {
                 return $stage;
             } elseif ($stage instanceof SimpleTestCapsule) {
@@ -71,7 +70,7 @@ class StagedTestCapsule extends TestCapsule
                         throw $result['exception'];
                     }
 
-                    return $result['response'];
+                    return new OperationResult($result['response'], $result['state']);
                 };
             }
 

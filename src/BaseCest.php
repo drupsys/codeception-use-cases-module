@@ -6,6 +6,7 @@ use Codeception\Example;
 use Carbon\Carbon as CarbonTime;
 use DateTime;
 use GuzzleHttp\Utils;
+use MVF\Codeception\UseCases\Contracts\ReadableInterface;
 use RuntimeException;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
 use MVF\Codeception\UseCases\Exceptions\InvalidActorProvided;
@@ -170,8 +171,10 @@ abstract class BaseCest
             $maybeRuntimeException = $exception;
         }
 
-        $actual = $actionResults->getActual();
-        if ($actual->getException() !== null) {
+        $exception = $actual->getException();
+        if ($exception instanceof ReadableInterface) {
+            $I->fail('Error: ' . $exception->toString());
+        } else if ($actual->getException() !== null) {
             throw $actual->getException();
         } elseif ($maybeRuntimeException) {
             throw $maybeRuntimeException;

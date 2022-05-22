@@ -6,7 +6,6 @@ use GuzzleHttp\Utils;
 use RuntimeException;
 use MVF\Codeception\UseCases\Contracts\ActionResults;
 use MVF\Codeception\UseCases\Contracts\ActorInterface;
-use MVF\Codeception\UseCases\Contracts\ReadableInterface;
 use MVF\Codeception\UseCases\ValueObjects\TestResult;
 use Throwable;
 
@@ -33,8 +32,6 @@ class Results implements ActionResults
         $exception = $this->actual->getException();
         if ($exception === null) {
             $this->I->fail('Expected exception but it was not thrown');
-        } else if ($exception instanceof ReadableInterface) {
-            $this->I->fail('Error: ' . $exception->toString());
         }
 
         if ($name === null) {

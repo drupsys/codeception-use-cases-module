@@ -171,11 +171,11 @@ abstract class BaseCest
             $maybeRuntimeException = $exception;
         }
 
-        $exception = $actual->getException();
+        $exception = $actionResults->getException();
         if ($exception instanceof ReadableInterface) {
             $I->fail('Error: ' . $exception->toString());
-        } else if ($actual->getException() !== null) {
-            throw $actual->getException();
+        } else if ($exception !== null) {
+            throw $exception;
         } elseif ($maybeRuntimeException) {
             throw $maybeRuntimeException;
         } elseif ($maybeAssertionException) {

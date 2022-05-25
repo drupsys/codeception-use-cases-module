@@ -2,10 +2,10 @@
 
 namespace MVF\Codeception\UseCases\TestCapsules;
 
-use MVF\Codeception\UseCases\Contracts\ActionInterface;
 use MVF\Codeception\UseCases\Contracts\DoubleInterface;
 use MVF\Codeception\UseCases\TestCapsule;
 use MVF\Codeception\UseCases\ValueObjects\EntrypointResult;
+use MVF\Servicer\Contracts\Action;
 use ReflectionClass;
 use RuntimeException;
 use Throwable;
@@ -31,9 +31,9 @@ class SimpleTestCapsule extends TestCapsule
 
     public function entrypoint(array $state, array $request): EntrypointResult
     {
-        if ($this->action->implementsInterface(ActionInterface::class) === false) {
+        if ($this->action->implementsInterface(Action::class) === false) {
             throw new RuntimeException(
-                sprintf("'%s' must implement '%s'", $this->action->getName(), ActionInterface::class),
+                sprintf("'%s' must implement '%s'", $this->action->getName(), Action::class),
             );
         }
 

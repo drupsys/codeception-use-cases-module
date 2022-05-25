@@ -2,9 +2,9 @@
 
 namespace MVF\Codeception\UseCases;
 
-use MVF\Codeception\UseCases\Contracts\ActionInterface;
+use MVF\Servicer\Contracts\Action;
 
-class GenericAction implements ActionInterface
+class GenericAction implements Action
 {
     /**
      * @var callable

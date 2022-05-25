@@ -30,5 +30,7 @@ logs:
 
 .PHONY: setup
 setup:
+	$(MAKE) down
+	-docker exec -it -u package codeception-use-cases-module rm -fr vendor
 	$(MAKE) build
 	docker exec -it -u package codeception-use-cases-module composer install

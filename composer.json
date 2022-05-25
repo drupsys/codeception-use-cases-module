@@ -10,10 +10,11 @@
         }
     ],
     "require": {
-        "php": "^7.4.0",
+        "php": "^7.4|^8.0",
         "ext-redis": "*",
         "lstrojny/functional-php": "^1.17",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "drupsys/servicer-contracts": "^1.0"
     },
     "autoload": {
         "psr-4": {

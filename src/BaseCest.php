@@ -57,7 +57,8 @@ abstract class BaseCest
         $reset = function() use ($databases, $dontCheckKeyConstraints) {
             each($databases, function (array $tableRows, string $table) {
                 Config::mysql()->table($table)->delete();
-                Config::mysql()->statement("ALTER TABLE $table AUTO_INCREMENT = 1");
+                $wrappedTable = Config::mysql()->getQueryGrammar()->wrapTable($table);
+                Config::mysql()->statement("ALTER TABLE $wrappedTable AUTO_INCREMENT = 1");
             });
             Config::redis()->del(Config::redisKey());
         };
